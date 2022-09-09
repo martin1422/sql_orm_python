@@ -17,6 +17,7 @@ __version__ = "1.2"
 import os
 import csv
 import sqlite3
+from typing import overload
 
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, ForeignKey
@@ -51,9 +52,11 @@ class Persona(base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     age = Column(Integer)
+    
     nacionalidad_id = Column(Integer, ForeignKey("nacionalidad.id"))
 
     nacionalidad = relationship("Nacionalidad")
+
 
     def __repr__(self):
         return f"Persona:{self.name} con nacionalidad {self.nacionalidad.country}"
@@ -89,9 +92,11 @@ def insert_persona(name, age, country):
     session = Session()
 
     # Buscar la nacionalidada nueva nacionalidad
-    query = session.query(Nacionalidad).filter(Nacionalidad.country == country)
-    nationality = query.first()
+    #query = session.query(Nacionalidad).filter(Nacionalidad.country == country)
+    #nationality = query.first()
 
+    nationality = session.query(Nacionalidad).filter(Nacionalidad.country == country).first()
+    
     if nationality is None:
         # Podrá ver en este ejemplo que sucederá este error con la persona
         # de nacionalidad Inglaterra ya que no está definida en el archivo
